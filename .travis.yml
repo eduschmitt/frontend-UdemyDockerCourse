@@ -1,0 +1,14 @@
+# says to travis that is necessary super user level permission
+sudo: required
+
+# tell to travis which services are necessary
+services:
+  - docker
+
+# shows how to execute docker command. The -t tag is to allow find the image later, without the hash
+before_install:
+  - docker build -t mytag -f Dockerfile.dev .
+
+# contain all commands that are necessary to run the test suite
+script:
+  - docker run mytag npm run test -- --coverage
