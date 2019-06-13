@@ -12,3 +12,16 @@ before_install:
 # contain all commands that are necessary to run the test suite
 script:
   - docker run mytag npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "sa-east-1"
+  app: "docker-react"
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-sa-east-1-349232553258"
+  bucket_path: "docker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
