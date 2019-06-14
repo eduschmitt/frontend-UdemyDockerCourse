@@ -5,23 +5,30 @@ sudo: required
 services:
   - docker
 
-# shows how to execute docker command. The -t tag is to allow find the image later, without the hash
+# shows how to execute docker command. The -t tag is to allow find the image later.
 before_install:
+  # when running tests, the Dockerfile.dev is used
   - docker build -t mytag -f Dockerfile.dev .
 
 # contain all commands that are necessary to run the test suite
 script:
+  # the "-- --coverage" is to finish the execution after the tests.
   - docker run mytag npm run test -- --coverage
 
+# contains all comands that are necessary to deploy
 deploy:
-  provider: elasticbeanstalk
+  # here we can have digitalocean, elasticbeanstalk, etc
+  provider: elasticbeanstalk  
   region: "us-east-1"
   app: "docker-react"
   env: "DockerReact-env"
+  # it is obtained at S3 section of AWS managemente console
   bucket_name: "elasticbeanstalk-us-east-1-349232553258"
+  # use the same name of the app
   bucket_path: "docker-react"
   on:
     branch: master
+  # these informations are configured at Travis CI environment variables
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key:
     secure: "$AWS_SECRET_KEY"
